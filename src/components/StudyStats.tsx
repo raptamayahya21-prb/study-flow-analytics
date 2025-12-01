@@ -26,7 +26,7 @@ const StudyStats = ({ sessions }: StudyStatsProps) => {
       <Card className="shadow-soft">
         <CardContent className="pt-6">
           <p className="text-center text-muted-foreground">
-            No data yet. Record your first study session!
+            Belum ada data. Catat sesi belajar pertama Anda!
           </p>
         </CardContent>
       </Card>
@@ -54,39 +54,39 @@ const StudyStats = ({ sessions }: StudyStatsProps) => {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card className="shadow-soft">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Study Time</CardTitle>
+          <CardTitle className="text-sm font-medium">Total Waktu Belajar</CardTitle>
           <Badge variant="outline">Σ</Badge>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-primary">{totalHours.toFixed(2)}h</div>
+          <div className="text-2xl font-bold text-primary">{totalHours.toFixed(2)}j</div>
           <p className="text-xs text-muted-foreground mt-1">
-            Integration: Σ(hours × 1)
+            Integrasi: Σ(jam × 1)
           </p>
         </CardContent>
       </Card>
 
       <Card className="shadow-soft">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Average Duration</CardTitle>
+          <CardTitle className="text-sm font-medium">Durasi Rata-rata</CardTitle>
           <Badge variant="outline">μ</Badge>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-primary">{avgDuration.toFixed(2)}h</div>
+          <div className="text-2xl font-bold text-primary">{avgDuration.toFixed(2)}j</div>
           <p className="text-xs text-muted-foreground mt-1">
-            Mean: Σ(xi) / n = {avgDuration.toFixed(4)}
+            Rata-rata: Σ(xi) / n = {avgDuration.toFixed(4)}
           </p>
         </CardContent>
       </Card>
 
       <Card className="shadow-soft">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Supremum (Max)</CardTitle>
+          <CardTitle className="text-sm font-medium">Supremum (Maks)</CardTitle>
           <Badge variant="outline">sup</Badge>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-accent">{supDuration.toFixed(2)}h</div>
+          <div className="text-2xl font-bold text-accent">{supDuration.toFixed(2)}j</div>
           <p className="text-xs text-muted-foreground mt-1">
-            Least upper bound
+            Batas atas terkecil
           </p>
         </CardContent>
       </Card>
@@ -97,16 +97,16 @@ const StudyStats = ({ sessions }: StudyStatsProps) => {
           <Badge variant="outline">inf</Badge>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-accent">{infDuration.toFixed(2)}h</div>
+          <div className="text-2xl font-bold text-accent">{infDuration.toFixed(2)}j</div>
           <p className="text-xs text-muted-foreground mt-1">
-            Greatest lower bound
+            Batas bawah terbesar
           </p>
         </CardContent>
       </Card>
 
       <Card className="shadow-soft">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Avg Efficiency</CardTitle>
+          <CardTitle className="text-sm font-medium">Efisiensi Rata-rata</CardTitle>
           <Badge variant="outline">μ(ε)</Badge>
         </CardHeader>
         <CardContent>
@@ -114,14 +114,14 @@ const StudyStats = ({ sessions }: StudyStatsProps) => {
             {(avgEfficiency * 100).toFixed(1)}%
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Normalized to [0, 1]
+            Dinormalisasi ke [0, 1]
           </p>
         </CardContent>
       </Card>
 
       <Card className="shadow-soft">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Latest Z-Score</CardTitle>
+          <CardTitle className="text-sm font-medium">Skor-Z Terbaru</CardTitle>
           <Badge variant="outline">z</Badge>
         </CardHeader>
         <CardContent>

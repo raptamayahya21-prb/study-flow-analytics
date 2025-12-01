@@ -23,7 +23,7 @@ const AIRecommendations = ({ sessions }: AIRecommendationsProps) => {
 
   const fetchRecommendations = async () => {
     if (sessions.length < 3) {
-      toast.error("Need at least 3 study sessions for AI recommendations");
+      toast.error("Minimal 3 sesi belajar diperlukan untuk rekomendasi AI");
       return;
     }
 
@@ -36,10 +36,10 @@ const AIRecommendations = ({ sessions }: AIRecommendationsProps) => {
       if (error) throw error;
 
       setRecommendations(data.recommendations);
-      toast.success("AI recommendations generated!");
+      toast.success("Rekomendasi AI berhasil dibuat!");
     } catch (error: any) {
       console.error("Error fetching recommendations:", error);
-      toast.error(error.message || "Failed to generate recommendations");
+      toast.error(error.message || "Gagal membuat rekomendasi");
     } finally {
       setIsLoading(false);
     }
@@ -50,14 +50,14 @@ const AIRecommendations = ({ sessions }: AIRecommendationsProps) => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-accent" />
-          AI Study Recommendations
+          Rekomendasi Belajar AI
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {!recommendations ? (
           <div className="text-center py-8">
             <p className="text-muted-foreground mb-4">
-              Get personalized study recommendations based on your patterns
+              Dapatkan rekomendasi belajar personal berdasarkan pola Anda
             </p>
             <Button
               onClick={fetchRecommendations}
@@ -67,18 +67,18 @@ const AIRecommendations = ({ sessions }: AIRecommendationsProps) => {
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Analyzing...
+                  Menganalisis...
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />
-                  Generate Recommendations
+                  Buat Rekomendasi
                 </>
               )}
             </Button>
             {sessions.length < 3 && (
               <p className="text-xs text-muted-foreground mt-2">
-                Need at least 3 sessions
+                Minimal 3 sesi diperlukan
               </p>
             )}
           </div>
@@ -95,7 +95,7 @@ const AIRecommendations = ({ sessions }: AIRecommendationsProps) => {
               disabled={isLoading}
               className="w-full"
             >
-              Refresh Recommendations
+              Perbarui Rekomendasi
             </Button>
           </div>
         )}
