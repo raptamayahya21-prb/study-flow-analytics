@@ -1,0 +1,4 @@
+project_id = "icfnmqaugtqylfkzzrcj"
+
+[functions.study-recommendations]
+verify_jwt = false
