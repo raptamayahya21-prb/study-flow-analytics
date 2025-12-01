@@ -26,7 +26,7 @@ const StudyChart = ({ sessions }: StudyChartProps) => {
   return (
     <Card className="shadow-soft">
       <CardHeader>
-        <CardTitle>Study Progress</CardTitle>
+        <CardTitle>Progress Belajar</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -41,14 +41,14 @@ const StudyChart = ({ sessions }: StudyChartProps) => {
               yAxisId="left"
               stroke="hsl(var(--primary))" 
               fontSize={12}
-              label={{ value: 'Hours', angle: -90, position: 'insideLeft' }}
+              label={{ value: 'Jam', angle: -90, position: 'insideLeft' }}
             />
             <YAxis 
               yAxisId="right"
               orientation="right"
               stroke="hsl(var(--accent))" 
               fontSize={12}
-              label={{ value: 'Efficiency %', angle: 90, position: 'insideRight' }}
+              label={{ value: 'Efisiensi %', angle: 90, position: 'insideRight' }}
             />
             <Tooltip 
               contentStyle={{ 
@@ -65,7 +65,7 @@ const StudyChart = ({ sessions }: StudyChartProps) => {
               stroke="hsl(var(--primary))" 
               strokeWidth={2}
               dot={{ fill: 'hsl(var(--primary))', r: 4 }}
-              name="Duration (hours)"
+              name="Durasi (jam)"
             />
             <Line 
               yAxisId="right"
@@ -74,7 +74,7 @@ const StudyChart = ({ sessions }: StudyChartProps) => {
               stroke="hsl(var(--accent))" 
               strokeWidth={2}
               dot={{ fill: 'hsl(var(--accent))', r: 4 }}
-              name="Efficiency (%)"
+              name="Efisiensi (%)"
             />
           </LineChart>
         </ResponsiveContainer>

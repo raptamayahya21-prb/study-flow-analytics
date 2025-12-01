@@ -34,7 +34,7 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
       // Validate duration as real number
       const durationReal = createReal(parseFloat(durationMinutes));
       if (!durationReal.isValid) {
-        toast.error(durationReal.errorMessage || "Invalid duration");
+        toast.error(durationReal.errorMessage || "Durasi tidak valid");
         setIsSubmitting(false);
         return;
       }
@@ -59,9 +59,9 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
       setEfficiencyScore([0.5]);
       setNotes("");
 
-      toast.success("Study session recorded!");
+      toast.success("Sesi belajar berhasil dicatat!");
     } catch (error: any) {
-      toast.error(error.message || "Failed to save session");
+      toast.error(error.message || "Gagal menyimpan sesi");
     } finally {
       setIsSubmitting(false);
     }
@@ -70,12 +70,12 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
   return (
     <Card className="shadow-soft">
       <CardHeader>
-        <CardTitle>Record Study Session</CardTitle>
+        <CardTitle>Catat Sesi Belajar</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="duration">Duration (minutes) *</Label>
+            <Label htmlFor="duration">Durasi (menit) *</Label>
             <Input
               id="duration"
               type="number"
@@ -88,13 +88,13 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
               disabled={isSubmitting}
             />
             <p className="text-xs text-muted-foreground">
-              Will be converted to hours using real number division
+              Akan dikonversi ke jam menggunakan pembagian bilangan real
             </p>
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <Label>Mood Score</Label>
+              <Label>Skor Mood</Label>
               <span className="text-sm font-medium">{moodScore[0].toFixed(1)}</span>
             </div>
             <Slider
@@ -106,12 +106,12 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
               className="w-full"
               disabled={isSubmitting}
             />
-            <p className="text-xs text-muted-foreground">0 (sad) to 10 (happy)</p>
+            <p className="text-xs text-muted-foreground">0 (sedih) hingga 10 (senang)</p>
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <Label>Focus Score</Label>
+              <Label>Skor Fokus</Label>
               <span className="text-sm font-medium">{focusScore[0].toFixed(1)}</span>
             </div>
             <Slider
@@ -123,12 +123,12 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
               className="w-full"
               disabled={isSubmitting}
             />
-            <p className="text-xs text-muted-foreground">0 (distracted) to 10 (laser-focused)</p>
+            <p className="text-xs text-muted-foreground">0 (terganggu) hingga 10 (sangat fokus)</p>
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <Label>Efficiency Score</Label>
+              <Label>Skor Efisiensi</Label>
               <span className="text-sm font-medium">{efficiencyScore[0].toFixed(2)}</span>
             </div>
             <Slider
@@ -140,14 +140,14 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
               className="w-full"
               disabled={isSubmitting}
             />
-            <p className="text-xs text-muted-foreground">0.00 (inefficient) to 1.00 (optimal)</p>
+            <p className="text-xs text-muted-foreground">0.00 (tidak efisien) hingga 1.00 (optimal)</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes (optional)</Label>
+            <Label htmlFor="notes">Catatan (opsional)</Label>
             <Textarea
               id="notes"
-              placeholder="What did you study? Any insights?"
+              placeholder="Apa yang Anda pelajari? Wawasan apa yang didapat?"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               disabled={isSubmitting}
@@ -156,7 +156,7 @@ const StudySessionForm = ({ onSubmit }: StudySessionFormProps) => {
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Save Session"}
+            {isSubmitting ? "Menyimpan..." : "Simpan Sesi"}
           </Button>
         </form>
       </CardContent>

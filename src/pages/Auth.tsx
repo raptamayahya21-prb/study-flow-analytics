@@ -30,11 +30,11 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Account created! Please sign in.");
+      toast.success("Akun berhasil dibuat! Silakan masuk.");
       setEmail("");
       setPassword("");
     } catch (error: any) {
-      toast.error(error.message || "Failed to create account");
+      toast.error(error.message || "Gagal membuat akun");
     } finally {
       setIsLoading(false);
     }
@@ -52,10 +52,10 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Welcome back!");
+      toast.success("Selamat datang kembali!");
       navigate("/");
     } catch (error: any) {
-      toast.error(error.message || "Failed to sign in");
+      toast.error(error.message || "Gagal masuk");
     } finally {
       setIsLoading(false);
     }
@@ -70,22 +70,22 @@ const Auth = () => {
               <BarChart3 className="w-8 h-8 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold">Study Analytics</h1>
+          <h1 className="text-3xl font-bold">Analisis Belajar</h1>
           <p className="text-muted-foreground">
-            Track and analyze your learning with real mathematics
+            Lacak dan analisis pembelajaran Anda dengan matematika real
           </p>
         </div>
 
         <Card className="shadow-soft">
           <CardHeader>
-            <CardTitle>Get Started</CardTitle>
-            <CardDescription>Sign in or create a new account</CardDescription>
+            <CardTitle>Mulai</CardTitle>
+            <CardDescription>Masuk atau buat akun baru</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="signin" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                <TabsTrigger value="signin">Masuk</TabsTrigger>
+                <TabsTrigger value="signup">Daftar</TabsTrigger>
               </TabsList>
 
               <TabsContent value="signin">
@@ -103,7 +103,7 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
+                    <Label htmlFor="signin-password">Kata Sandi</Label>
                     <Input
                       id="signin-password"
                       type="password"
@@ -116,7 +116,7 @@ const Auth = () => {
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Signing in..." : "Sign In"}
+                    {isLoading ? "Masuk..." : "Masuk"}
                   </Button>
                 </form>
               </TabsContent>
@@ -136,7 +136,7 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password">Kata Sandi</Label>
                     <Input
                       id="signup-password"
                       type="password"
@@ -149,7 +149,7 @@ const Auth = () => {
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Creating account..." : "Create Account"}
+                    {isLoading ? "Membuat akun..." : "Buat Akun"}
                   </Button>
                 </form>
               </TabsContent>
