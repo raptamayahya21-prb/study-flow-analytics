@@ -3,13 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { LogOut, BarChart3, FileDown, Loader2 } from "lucide-react";
+import { LogOut, BarChart3, FileDown, Loader2, Menu } from "lucide-react";
 import StudySessionForm from "@/components/StudySessionForm";
 import StudyStats from "@/components/StudyStats";
 import StudyChart from "@/components/StudyChart";
 import AIRecommendations from "@/components/AIRecommendations";
+import WeeklyHistory from "@/components/WeeklyHistory";
 import { toast } from "sonner";
 import { generateStudyPDF } from "@/lib/pdfExport";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface StudySession {
   id: string;
@@ -30,10 +38,10 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [aiRecommendations, setAiRecommendations] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
         navigate("/auth");
@@ -42,7 +50,6 @@ const Dashboard = () => {
       }
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
         navigate("/auth");
@@ -92,7 +99,6 @@ const Dashboard = () => {
   }) => {
     if (!user) return;
 
-    // Get week start using our SQL function
     const today = new Date().toISOString().split("T")[0];
     const { data: weekData } = await supabase.rpc("get_week_start", {
       input_date: today,
@@ -137,7 +143,7 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-2">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-muted-foreground">Memuat...</p>
@@ -147,20 +153,24 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen gradient-subtle">
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-20">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
+            {/* Logo & Title */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+              <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-primary-foreground" />
               </div>
-              <div>
-                <h1 className="text-xl font-bold">Analisis Belajar</h1>
-                <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-bold leading-tight">Analisis Belajar</h1>
+                <p className="text-xs text-muted-foreground truncate max-w-[150px]">{user?.email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-2">
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -179,21 +189,81 @@ const Dashboard = () => {
                 Keluar
               </Button>
             </div>
+
+            {/* Mobile Menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[280px]">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 space-y-4">
+                  <div className="pb-4 border-b">
+                    <p className="text-sm font-medium">Akun</p>
+                    <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => {
+                      handleExportPDF();
+                      setMobileMenuOpen(false);
+                    }}
+                    disabled={isExporting || sessions.length === 0}
+                  >
+                    {isExporting ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <FileDown className="w-4 h-4 mr-2" />
+                    )}
+                    Ekspor PDF
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-destructive"
+                    onClick={() => {
+                      handleSignOut();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Keluar
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-1">
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-6">
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Left Column - Form */}
+          <div className="lg:col-span-4 space-y-6">
             <StudySessionForm onSubmit={handleNewSession} />
+            <div className="hidden lg:block">
+              <WeeklyHistory sessions={sessions} />
+            </div>
           </div>
 
-          <div className="lg:col-span-2 space-y-8">
+          {/* Right Column - Stats, Chart, AI */}
+          <div className="lg:col-span-8 space-y-6">
             <StudyStats sessions={sessions} />
+            
             <div ref={chartRef}>
               <StudyChart sessions={sessions} />
             </div>
+            
+            {/* Mobile Weekly History */}
+            <div className="lg:hidden">
+              <WeeklyHistory sessions={sessions} />
+            </div>
+            
             <AIRecommendations 
               sessions={sessions} 
               onRecommendationsChange={setAiRecommendations}
