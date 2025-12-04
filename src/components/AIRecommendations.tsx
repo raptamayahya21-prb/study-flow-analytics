@@ -15,9 +15,10 @@ interface StudySession {
 
 interface AIRecommendationsProps {
   sessions: StudySession[];
+  onRecommendationsChange?: (recommendations: string) => void;
 }
 
-const AIRecommendations = ({ sessions }: AIRecommendationsProps) => {
+const AIRecommendations = ({ sessions, onRecommendationsChange }: AIRecommendationsProps) => {
   const [recommendations, setRecommendations] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,6 +37,7 @@ const AIRecommendations = ({ sessions }: AIRecommendationsProps) => {
       if (error) throw error;
 
       setRecommendations(data.recommendations);
+      onRecommendationsChange?.(data.recommendations);
       toast.success("Rekomendasi AI berhasil dibuat!");
     } catch (error: any) {
       console.error("Error fetching recommendations:", error);

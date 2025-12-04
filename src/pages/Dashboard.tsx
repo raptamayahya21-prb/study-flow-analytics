@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
-import { LogOut, BarChart3, FileDown } from "lucide-react";
+import { LogOut, BarChart3, FileDown, Loader2 } from "lucide-react";
 import StudySessionForm from "@/components/StudySessionForm";
 import StudyStats from "@/components/StudyStats";
 import StudyChart from "@/components/StudyChart";
 import AIRecommendations from "@/components/AIRecommendations";
 import { toast } from "sonner";
+import { generateStudyPDF } from "@/lib/pdfExport";
 
 interface StudySession {
   id: string;
@@ -27,6 +28,9 @@ const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [sessions, setSessions] = useState<StudySession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
+  const [aiRecommendations, setAiRecommendations] = useState("");
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check current session
@@ -110,7 +114,25 @@ const Dashboard = () => {
   };
 
   const handleExportPDF = async () => {
-    toast.info("Fitur ekspor PDF segera hadir!");
+    if (sessions.length === 0) {
+      toast.error("Tidak ada data untuk diekspor");
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      const fileName = await generateStudyPDF(
+        sessions,
+        chartRef.current,
+        aiRecommendations
+      );
+      toast.success(`PDF berhasil diunduh: ${fileName}`);
+    } catch (error) {
+      console.error("Error exporting PDF:", error);
+      toast.error("Gagal mengekspor PDF");
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   if (isLoading) {
@@ -139,8 +161,17 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                <FileDown className="w-4 h-4 mr-2" />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleExportPDF}
+                disabled={isExporting || sessions.length === 0}
+              >
+                {isExporting ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <FileDown className="w-4 h-4 mr-2" />
+                )}
                 Ekspor PDF
               </Button>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
@@ -160,8 +191,13 @@ const Dashboard = () => {
 
           <div className="lg:col-span-2 space-y-8">
             <StudyStats sessions={sessions} />
-            <StudyChart sessions={sessions} />
-            <AIRecommendations sessions={sessions} />
+            <div ref={chartRef}>
+              <StudyChart sessions={sessions} />
+            </div>
+            <AIRecommendations 
+              sessions={sessions} 
+              onRecommendationsChange={setAiRecommendations}
+            />
           </div>
         </div>
       </main>
