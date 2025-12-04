@@ -45,37 +45,40 @@ Deno.serve(async (req) => {
     const maxDuration = Math.max(...durations);
     const minDuration = Math.min(...durations);
 
-    // Prepare prompt for AI
-    const systemPrompt = `You are a study analytics expert that provides personalized recommendations based on real mathematical analysis.
+    // Prepare prompt for AI (Bahasa Indonesia)
+    const systemPrompt = `Kamu adalah ahli analisis belajar yang memberikan rekomendasi personal berdasarkan analisis matematika bilangan real.
 
-Your recommendations should:
-- Be specific and actionable
-- Reference the actual data patterns
-- Suggest optimal study durations based on their patterns
-- Identify their peak performance times
-- Recommend improvements for focus and efficiency
-- Keep recommendations concise (3-5 points)`;
+PENTING: Seluruh respons HARUS dalam Bahasa Indonesia.
 
-    const userPrompt = `Analyze these study patterns and provide recommendations:
+Rekomendasi kamu harus:
+- Spesifik dan dapat ditindaklanjuti
+- Merujuk pada pola data yang sebenarnya
+- Menyarankan durasi belajar optimal berdasarkan pola mereka
+- Mengidentifikasi waktu performa puncak mereka
+- Merekomendasikan peningkatan fokus dan efisiensi
+- Ringkas (3-5 poin)
+- Gunakan emoji untuk membuat rekomendasi lebih menarik`;
 
-Study Statistics (Real Number Analysis):
-- Total Sessions: ${sessions.length}
-- Average Duration: ${avgDuration.toFixed(2)} hours (μ = Σxi/n)
-- Duration Range: [${minDuration.toFixed(2)}h, ${maxDuration.toFixed(2)}h] (infimum to supremum)
-- Average Efficiency: ${(avgEfficiency * 100).toFixed(1)}% (normalized to [0,1])
-- Average Mood Score: ${avgMood.toFixed(1)}/10
-- Average Focus Score: ${avgFocus.toFixed(1)}/10
+    const userPrompt = `Analisis pola belajar berikut dan berikan rekomendasi dalam Bahasa Indonesia:
 
-Recent Sessions (last 5):
+Statistik Belajar (Analisis Bilangan Real):
+- Total Sesi: ${sessions.length}
+- Rata-rata Durasi: ${avgDuration.toFixed(2)} jam (μ = Σxi/n)
+- Rentang Durasi: [${minDuration.toFixed(2)} jam, ${maxDuration.toFixed(2)} jam] (infimum ke supremum)
+- Rata-rata Efisiensi: ${(avgEfficiency * 100).toFixed(1)}% (dinormalisasi ke [0,1])
+- Skor Mood Rata-rata: ${avgMood.toFixed(1)}/10
+- Skor Fokus Rata-rata: ${avgFocus.toFixed(1)}/10
+
+Sesi Terbaru (5 terakhir):
 ${sessions.slice(-5).map((s, i) => `
-Session ${i + 1}:
-- Duration: ${s.duration_hours.toFixed(2)}h
-- Efficiency: ${(s.efficiency_score * 100).toFixed(1)}%
+Sesi ${i + 1}:
+- Durasi: ${s.duration_hours.toFixed(2)} jam
+- Efisiensi: ${(s.efficiency_score * 100).toFixed(1)}%
 - Mood: ${s.mood_score.toFixed(1)}/10
-- Focus: ${s.focus_score.toFixed(1)}/10
+- Fokus: ${s.focus_score.toFixed(1)}/10
 `).join('\n')}
 
-Provide 3-5 specific, actionable recommendations to improve their study effectiveness.`;
+Berikan 3-5 rekomendasi spesifik dan dapat ditindaklanjuti untuk meningkatkan efektivitas belajar mereka. Gunakan Bahasa Indonesia yang baik dan benar.`;
 
     // Call Lovable AI Gateway
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
