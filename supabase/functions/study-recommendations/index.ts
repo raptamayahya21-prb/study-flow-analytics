@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
 
     if (!sessions || sessions.length < 3) {
       return new Response(
-        JSON.stringify({ error: "Need at least 3 sessions for recommendations" }),
+        JSON.stringify({ error: "Minimal 3 sesi belajar diperlukan untuk rekomendasi" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -104,19 +104,19 @@ Berikan 3-5 rekomendasi spesifik dan dapat ditindaklanjuti untuk meningkatkan ef
     if (!aiResponse.ok) {
       if (aiResponse.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
+          JSON.stringify({ error: "Batas permintaan tercapai. Silakan coba lagi nanti." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       if (aiResponse.status === 402) {
         return new Response(
-          JSON.stringify({ error: "AI credits exhausted. Please add credits to continue." }),
+          JSON.stringify({ error: "Kredit AI habis. Silakan tambah kredit untuk melanjutkan." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       const errorText = await aiResponse.text();
       console.error("AI Gateway error:", aiResponse.status, errorText);
-      throw new Error("AI Gateway request failed");
+      throw new Error("Gagal mendapatkan rekomendasi dari AI");
     }
 
     const aiData = await aiResponse.json();
