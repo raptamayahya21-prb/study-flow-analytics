@@ -2,10 +2,23 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Calendar, Clock, TrendingUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Clock, Trash2 } from "lucide-react";
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, isWithinInterval, parseISO } from "date-fns";
 import { id } from "date-fns/locale";
 import { calculateMean, findSupremum, findInfimum, simpleIntegration } from "@/lib/realNumberMath";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface StudySession {
   id: string;
@@ -21,10 +34,32 @@ interface StudySession {
 
 interface WeeklyHistoryProps {
   sessions: StudySession[];
+  onSessionDeleted?: () => void;
 }
 
-const WeeklyHistory = ({ sessions }: WeeklyHistoryProps) => {
+const WeeklyHistory = ({ sessions, onSessionDeleted }: WeeklyHistoryProps) => {
   const [currentWeek, setCurrentWeek] = useState(new Date());
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDeleteSession = async (sessionId: string) => {
+    setDeletingId(sessionId);
+    try {
+      const { error } = await supabase
+        .from("study_sessions")
+        .delete()
+        .eq("id", sessionId);
+
+      if (error) throw error;
+
+      toast.success("Sesi belajar berhasil dihapus");
+      onSessionDeleted?.();
+    } catch (error) {
+      console.error("Error deleting session:", error);
+      toast.error("Gagal menghapus sesi belajar");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 }); // Monday
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
@@ -164,7 +199,7 @@ const WeeklyHistory = ({ sessions }: WeeklyHistoryProps) => {
                 .map((session) => (
                   <div
                     key={session.id}
-                    className="flex items-center justify-between p-2 bg-card border rounded-md text-sm"
+                    className="flex items-center justify-between p-2 bg-card border rounded-md text-sm group"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">
@@ -178,6 +213,35 @@ const WeeklyHistory = ({ sessions }: WeeklyHistoryProps) => {
                       <Badge variant={session.efficiency_score >= 0.7 ? "default" : "secondary"}>
                         {(session.efficiency_score * 100).toFixed(0)}%
                       </Badge>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
+                            disabled={deletingId === session.id}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Hapus Sesi Belajar?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Sesi belajar pada {format(parseISO(session.created_at), "EEEE, d MMMM yyyy", { locale: id })} akan dihapus permanen.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Batal</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteSession(session.id)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Hapus
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 ))}
