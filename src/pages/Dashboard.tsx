@@ -247,7 +247,7 @@ const Dashboard = () => {
           <div className="lg:col-span-4 space-y-6">
             <StudySessionForm onSubmit={handleNewSession} />
             <div className="hidden lg:block">
-              <WeeklyHistory sessions={sessions} />
+              <WeeklyHistory sessions={sessions} onSessionDeleted={fetchSessions} />
             </div>
           </div>
 
@@ -261,7 +261,7 @@ const Dashboard = () => {
             
             {/* Mobile Weekly History */}
             <div className="lg:hidden">
-              <WeeklyHistory sessions={sessions} />
+              <WeeklyHistory sessions={sessions} onSessionDeleted={fetchSessions} />
             </div>
             
             <AIRecommendations 
